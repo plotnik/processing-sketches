@@ -55,7 +55,7 @@ void flip(int x, int y) {
 }
 
 void draw() {
-  // Нарисуем клетки на доске
+  // Нарисуем клетки на доске.
   for (int x=0; x<n; x++) {
     int xp = x*step;
     for (int y=0; y<n; y++) {
