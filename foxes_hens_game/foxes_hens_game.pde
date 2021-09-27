@@ -147,12 +147,18 @@ void mouseDragged() {
 }
 
 void mouseReleased() {
+  // определить координаты нажатой клетки
   int x = floor(map(mouseX, 0,width,  0,7));
   int y = floor(map(mouseY, 0,height, 0,7));
   //println("--- " + x + "," + y + " : " + b[x][y]);
+  
+  // проверить допустимость хода
   if (b[x][y] == EMP && possibleHenMove(x,y,xsel,ysel)) {
+    // совершить ход курицы
     b[x][y] = HEN;
     b[xsel][ysel] = EMP;
+    
+    // совершить ход лисы
     foxMove();
   }
   xsel = -1;
@@ -216,9 +222,18 @@ void foxMove() {
       }
     }
   }
+  // TODO: лисы выигрывают, если им удается съесть 12 кур.
+  // TODO: Куры выигрывают, если им удается занять верхний
+  // квадрат игры.
 }
 
+/* Анимировать прыжковый ход лисы.
+   Номер хода лисы указан в переменной `aninum`.
+   Если `aninum == -1`, то анимация завершена.
+   Список ходов находится в объекте `anijump: FoxJumps`.
+*/
 void aniFoxMove() {
+  println("-- aniFoxMove: [" + aninum + "] " + anijump);
   int nf = anijump.n;
   int dir = anijump.m[aninum];
   int x1 = xf[nf];
@@ -235,12 +250,10 @@ void aniFoxMove() {
 
   aninum--;
   anidelay = 20;
-
-  // TODO: лисы выигрывают, если им удается съесть 12 кур.
-  // Куры выигрывают, если им удается занять верхний
-  // квадрат игры.
 }
 
+/* Передвинуть лису на соседнюю клетку.
+ */
 void makeFoxMove(int nf, int dir) {
   int x1 = xf[nf];
   int y1 = yf[nf];
