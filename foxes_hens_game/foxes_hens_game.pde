@@ -35,7 +35,7 @@ final int GAME_FOXES_WIN = 3;
    2: выиграли курицы
    3: выиграли лисы
  */
-int gameScreen = GAME_IN_PROCESS;
+int gameScreen;
 
 // размер клетки на доске
 float step;
@@ -51,7 +51,6 @@ int ysel = -1;
 // позиция первой и второй лисы
 int[] xf = new int[2];
 int[] yf = new int[2];
-int curFox = 0;
 
 // координаты фишки, которую тянут
 int xdrag, ydrag;
@@ -89,7 +88,7 @@ void setup() {
 
 // начальное заполнение доски
 void resetBoard() {
-  curFox = 0;	
+  int curFox = 0;	
   for (int x=0; x<N; x++) {
     for (int y=0; y<N; y++) {
       b[x][y] = b0[y].charAt(x);
@@ -174,16 +173,6 @@ void drawGameScreen() {
   // TODO: прочертить линиями последний ход лисы
 }
 
-// похоже что в имплементации оператора rect на linux есть баг
-void rect1(float x1, float y1, float x2, float y2) {
-  rect(x1,y1,x2,y2);
-  
-  //line(x1,y1,x2,y1);
-  //line(x2,y1,x2,y2);
-  //line(x2,y2,x1,y2);
-  //line(x1,y2,x1,y1);
-}
-
 void mousePressed() {
   switch (gameScreen) {
     case GAME_IN_PROCESS: 
@@ -229,10 +218,37 @@ void mouseReleased() {
     b[x][y] = HEN;
     b[xsel][ysel] = EMP;
     
-    // совершить ход лисы
-    foxMove();
+    // Куры выигрывают, если им удается занять верхний квадрат игры.
+    if (hensWon()) {
+        gameScreen = GAME_HENS_WIN;
+    } else { 
+        // совершить ход лисы
+        foxMove();
+    }
   }
   xsel = -1;
+}
+
+boolean hensWon() {
+    final String[] hw = {
+      "  xxx  ",
+      "  xxx  ",
+      "..xxx..",
+      ".......",
+      ".......",
+      "  ...  ",
+      "  ...  "
+    };
+    for (int x=0; x<N; x++) {
+        for (int y=0; y<N; y++) {
+          if (hw[y].charAt(x) == HEN) {
+            if (b[x][y] != HEN) {
+                return false;
+            }
+          }
+        }
+    }
+    return true;
 }
 
 boolean possibleHenMove(int x1, int y1, int x2, int y2) {
@@ -283,7 +299,8 @@ void foxMove() {
     int[] m0 = findFoxMoves(xf[0],yf[0]).array();
     int[] m1 = findFoxMoves(xf[1],yf[1]).array();
     if (m0.length == 0 && m1.length == 0) {
-      stopGame("HENS WIN!");
+      gameScreen = GAME_HENS_WIN;
+      
     } else {
       int k = int(random(m0.length + m1.length));
       if (k < m0.length) {
@@ -293,9 +310,19 @@ void foxMove() {
       }
     }
   }
-  // TODO: лисы выигрывают, если им удается съесть 12 кур.
-  // TODO: Куры выигрывают, если им удается занять верхний
-  // квадрат игры.
+  
+  // лисы выигрывают, если им удается съесть 12 кур
+  int nHens = 0;
+  for (int x=0; x<N; x++) {
+    for (int y=0; y<N; y++) {
+      if (b[x][y] == HEN) {  
+          nHens++;
+      }
+    }
+  }
+  if (nHens < 9) {
+      gameScreen = GAME_FOXES_WIN;
+  }
 }
 
 /* Анимировать прыжковый ход лисы.
@@ -334,11 +361,6 @@ void makeFoxMove(int nf, int dir) {
   b[x1][y1] = EMP;
   xf[nf] = x2;
   yf[nf] = y2;
-}
-
-void stopGame(String msg) {
-  // TODO: остановить игру
-  println(msg);
 }
 
 // направления
