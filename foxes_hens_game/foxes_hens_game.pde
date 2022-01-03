@@ -1,4 +1,6 @@
-String[] b0 = {
+
+// начальное расположение фигур на поле
+final String[] b0 = {
   "  ...  ",
   "  ...  ",
   "..*.*..",
@@ -8,18 +10,32 @@ String[] b0 = {
   "  xxx  "
 };
 
-int N = 7;
+// размер поля
+final int N = 7;
+
+// расположение фигур на поле
 char[][] b = new char[N][N];
 
-char SPC = ' ';
-char EMP = '.';
-char FOX = '*';
-char HEN = 'x';
+final char SPC = ' ';
+final char EMP = '.';
+final char FOX = '*';
+final char HEN = 'x';
 
 // цвета
-int cGrass = #22A517;
-int cFox = #EDB437;
-int cHen = 128;
+final int cGrass = #22A517;
+final int cFox = #EDB437;
+final int cHen = 128;
+
+final int GAME_IN_PROCESS = 1;
+final int GAME_HENS_WIN = 2;
+final int GAME_FOXES_WIN = 3;
+
+/* Текущее состояние игры.
+   1: игра в процессе
+   2: выиграли курицы
+   3: выиграли лисы
+ */
+int gameScreen = GAME_IN_PROCESS;
 
 // размер клетки на доске
 float step;
@@ -65,11 +81,15 @@ FoxJumps anijump;
 int anidelay = 0;
 
 void setup() {
-  size(800, 800);
+  size(600, 600);
   step = width/7;
   d = step*0.75;
+  resetBoard();
+}
 
-  // начальное заполнение доски
+// начальное заполнение доски
+void resetBoard() {
+  curFox = 0;	
   for (int x=0; x<N; x++) {
     for (int y=0; y<N; y++) {
       b[x][y] = b0[y].charAt(x);
@@ -82,9 +102,12 @@ void setup() {
       }
     }
   }
+  gameScreen = GAME_IN_PROCESS;
 }
 
 void draw() {
+  background(255);
+  
   // Если есть ход, то отрабатываем ход
   if (aninum >= 0) {
     // Если есть задержка, то отрабатываем задержку
@@ -95,6 +118,30 @@ void draw() {
     aniFoxMove();
   }
 
+  switch (gameScreen) {
+    case GAME_IN_PROCESS: 
+      drawGameScreen();
+      break;
+    case GAME_HENS_WIN:
+      drawClickToRestart(cHen, "Hens Win!");
+      break;
+    case GAME_FOXES_WIN:
+      drawClickToRestart(cFox, "Foxes Win!");
+      break;
+    }
+}
+
+void drawClickToRestart(int c, String message) {
+  background(c);
+  textAlign(CENTER);
+  fill(236, 240, 241);
+  textSize(70);
+  text(message, width/2, height/2 - 20);
+  textSize(15);
+  text("Click to Restart", width/2, height-30);
+}
+
+void drawGameScreen() {
   for (int x=0; x<N; x++) {
     float xp = x*step;
     for (int y=0; y<N; y++) {
@@ -127,7 +174,31 @@ void draw() {
   // TODO: прочертить линиями последний ход лисы
 }
 
+// похоже что в имплементации оператора rect на linux есть баг
+void rect1(float x1, float y1, float x2, float y2) {
+  rect(x1,y1,x2,y2);
+  
+  //line(x1,y1,x2,y1);
+  //line(x2,y1,x2,y2);
+  //line(x2,y2,x1,y2);
+  //line(x1,y2,x1,y1);
+}
+
 void mousePressed() {
+  switch (gameScreen) {
+    case GAME_IN_PROCESS: 
+      mousePressedInGame();
+      break;
+    case GAME_HENS_WIN:
+      resetBoard();
+      break;
+    case GAME_FOXES_WIN:
+      resetBoard();
+      break;
+  }
+}
+
+void mousePressedInGame() {
   // Определим координаты нажатой клетки
   int x = floor(map(mouseX, 0,width,  0,7));
   int y = floor(map(mouseY, 0,height, 0,7));
