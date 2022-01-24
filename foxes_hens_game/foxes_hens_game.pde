@@ -1,3 +1,23 @@
+final boolean useImages = true;
+PImage foxImage, henImage;
+
+// размер клетки на доске
+float step;
+
+// диаметр фишки
+float d;
+
+void setup() {
+  size(600, 600);
+  step = width/7;
+  d = step*0.75;
+  
+  if (useImages) {
+    foxImage = loadImage("fox.png");
+    henImage = loadImage("hen.png");
+  }
+  resetBoard();
+}
 
 // начальное расположение фигур на поле
 final String[] b0 = {
@@ -20,7 +40,6 @@ final char SPC = ' ';
 final char EMP = '.';
 final char FOX = '*';
 final char HEN = 'x';
-
 // цвета
 final int cGrass = #22A517;
 final int cFox = #EDB437;
@@ -36,12 +55,6 @@ final int GAME_FOXES_WIN = 3;
    3: выиграли лисы
  */
 int gameScreen;
-
-// размер клетки на доске
-float step;
-
-// диаметр фишки
-float d;
 
 // какая фишка сейчас выбрана?
 // (-1 если никакая)
@@ -78,13 +91,6 @@ FoxJumps anijump;
 
 // счетчик задержки анимации
 int anidelay = 0;
-
-void setup() {
-  size(600, 600);
-  step = width/7;
-  d = step*0.75;
-  resetBoard();
-}
 
 // начальное заполнение доски
 void resetBoard() {
@@ -154,10 +160,12 @@ void drawGameScreen() {
 
       // нарисовать лис и кур
       if (cell == FOX || cell == HEN) {
-        fill(cell == FOX? cFox : cHen);
-        stroke(0);
         if (!(xsel == x && ysel==y)) {
-          ellipse(xp+step/2,yp+step/2,d,d);
+          if (useImages) {      
+            drawPieceAsImage(xp+step/2,yp+step/2,cell);
+          } else {
+            drawPieceAsVector(xp+step/2,yp+step/2,cell);
+          }
         }
       }
     }
@@ -165,12 +173,25 @@ void drawGameScreen() {
 
   // фишка которую тянут
   if (xsel != -1) {
-    fill(cHen);
-    stroke(0);
-    ellipse(xdrag,ydrag,d,d);
+      if (useImages) {
+        drawPieceAsImage(xdrag,ydrag,HEN);
+      } else {
+        drawPieceAsVector(xdrag,ydrag,HEN);
+      }
   }
 
   // TODO: прочертить линиями последний ход лисы
+}
+
+void drawPieceAsImage(float xp, float yp, char cell) {
+    imageMode(CENTER); 
+    image(cell == FOX? foxImage : henImage, xp,yp,d,d);
+}
+
+void drawPieceAsVector(float xp, float yp, char cell) {
+    fill(cell == FOX? cFox : cHen);
+    stroke(0);
+    ellipse(xp+step/2,yp+step/2,d,d);
 }
 
 void mousePressed() {
