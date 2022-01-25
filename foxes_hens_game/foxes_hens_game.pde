@@ -8,7 +8,7 @@ float step;
 float d;
 
 void setup() {
-  size(600, 600);
+  size(800, 800);
   step = width/7;
   d = step*0.75;
   
@@ -51,7 +51,7 @@ final int GAME_FOXES_WIN = 3;
 
 /* Текущее состояние игры.
    1: игра в процессе
-   2: выиграли курицы
+   2: выи��рали курицы
    3: выиграли лисы
  */
 int gameScreen;
@@ -191,7 +191,7 @@ void drawPieceAsImage(float xp, float yp, char cell) {
 void drawPieceAsVector(float xp, float yp, char cell) {
     fill(cell == FOX? cFox : cHen);
     stroke(0);
-    ellipse(xp+step/2,yp+step/2,d,d);
+    ellipse(xp,yp,d,d);
 }
 
 void mousePressed() {
@@ -346,7 +346,7 @@ void foxMove() {
   }
 }
 
-/* Анимировать прыжковый ход лисы.
+/* ����нимировать прыжковый ход лисы.
    Номер хода лисы указан в переменной `aninum`.
    Если `aninum == -1`, то анимация завершена.
    Список ходов находится в объекте `anijump: FoxJumps`.
