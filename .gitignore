@@ -11,3 +11,6 @@ out
 
 # jEdit marks
 **/*.marks
+
+# readme
+foxes_hens_game/README.html
