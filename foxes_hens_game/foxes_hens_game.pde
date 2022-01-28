@@ -83,13 +83,27 @@ class FoxJumps {
   }
 }
 
-// номер хода лисы который сейчас анимируем
-int aninum = -1;
+final int COMMAND_DELAY     = 1;
+final int COMMAND_MOVE      = 2;
+final int COMMAND_JUMP      = 3;
+final int COMMAND_HENS_WIN  = 4;
+final int COMMAND_FOXES_WIN = 5;
 
-// ход лисы который сейчас анимируем
-FoxJumps anijump;
+/* Отложення команда.
+   Смысл параметров `n` и `d` зависит от типа команды.
+ */
+class Command {
+    // тип комнды
+    int type;
+    
+    int n;
+    int d;
+}
 
-// счетчик задержки анимации
+// стек команд 
+ArrayList<Command> commandStack = new ArrayList<Command>();
+
+// задержка анимации
 int anidelay = 0;
 
 // начальное заполнение доски
@@ -110,18 +124,60 @@ void resetBoard() {
   gameScreen = GAME_IN_PROCESS;
 }
 
+Command popCommand() {
+    int k = commandStack.size()-1;
+    Command c = commandStack.get(k);
+    commandStack.remove(k);
+    return c;
+}
+
+void pushCommand(int t, int n, int d) {
+    Command c = new Command();
+    c.type = t;
+    c.n = n;
+    c.d = d;
+    commandStack.add(c);
+}
+
+void pushDelay() {
+    pushCommand(COMMAND_DELAY, 50, 0);
+}
+
 void draw() {
-  background(255);
   
-  // Если есть ход, то отрабатываем ход
-  if (aninum >= 0) {
-    // Если есть задержка, то отрабатываем задержку
-    if (anidelay > 0) {
-      anidelay--;
-      return;
-    }
-    aniFoxMove();
+  // Если есть команда, то отрабатываем ее
+  if (commandStack.size() > 0) {
+      Command c = popCommand();
+      switch (c.type) {
+        case COMMAND_DELAY:
+            anidelay = c.n;
+            break;
+            
+        case COMMAND_MOVE:
+            makeFoxMove(c.n, c.d);
+            break;
+            
+        case COMMAND_JUMP:   
+            makeFoxJump(c.n, c.d);
+            break;
+            
+        case COMMAND_HENS_WIN:
+            gameScreen = GAME_HENS_WIN;
+            break;
+
+        case COMMAND_FOXES_WIN:
+            gameScreen = GAME_FOXES_WIN;
+            break;
+      }
   }
+  
+  // Если есть задержка, то отрабатываем ее
+  if (anidelay > 0) {
+    anidelay--;
+    return;
+  }
+
+  background(255);
 
   switch (gameScreen) {
     case GAME_IN_PROCESS: 
@@ -179,8 +235,6 @@ void drawGameScreen() {
         drawPieceAsVector(xdrag,ydrag,HEN);
       }
   }
-
-  // TODO: прочертить линиями последний ход лисы
 }
 
 void drawPieceAsImage(float xp, float yp, char cell) {
@@ -231,7 +285,6 @@ void mouseReleased() {
   // определить координаты нажатой клетки
   int x = floor(map(mouseX, 0,width,  0,7));
   int y = floor(map(mouseY, 0,height, 0,7));
-  //println("--- " + x + "," + y + " : " + b[x][y]);
   
   // проверить допустимость хода
   if (b[x][y] == EMP && possibleHenMove(x,y,xsel,ysel)) {
@@ -241,7 +294,9 @@ void mouseReleased() {
     
     // Куры выигрывают, если им удается занять верхний квадрат игры.
     if (hensWon()) {
-        gameScreen = GAME_HENS_WIN;
+        pushCommand(COMMAND_HENS_WIN,0,0);
+        pushDelay();
+        
     } else { 
         // совершить ход лисы
         foxMove();
@@ -286,15 +341,19 @@ boolean possibleHenMove(int x1, int y1, int x2, int y2) {
 void foxMove() {
   /* Собрать полный набор максимально длинных прыжков */
   int maxlen = 1;
+  
+  // список максимально длинных ходов лис 
   ArrayList<FoxJumps> mm = new ArrayList<FoxJumps>();
+  
+  // цикл по номерам лис
   for (int i=0; i<2; i++) {
     IntList stack = new IntList();
     ArrayList<int[]> jj = new ArrayList<int[]>();
     collectFoxJumps(xf[i],yf[i],stack,jj);
 
     for (int[] ii: jj) {
-      // найти самый длинный ход
       if (ii.length > maxlen) {
+        // если найден более длинный ход, то сбрсываем список
         maxlen = ii.length;
         mm = new ArrayList<FoxJumps>();
         mm.add(new FoxJumps(i,ii));
@@ -307,12 +366,14 @@ void foxMove() {
 
   /* Выбрать случайную цепочку из максимально длинных прыжков */
   if (mm.size() > 0) {
-    int k = int(random(mm.size()));
+    int r = int(random(mm.size()));
 
     // вызвать анимацию для цепочки прыжков
-    anijump = mm.get(k);
-    aninum = anijump.m.length - 1;
-    aniFoxMove();
+    FoxJumps jumps = mm.get(r);
+    for (int k=0; k<jumps.m.length; k++) {
+        pushDelay();
+        pushCommand(COMMAND_JUMP, jumps.n, jumps.m[k]);
+    }
 
   } else {
     // случайным образом выбрать один из оставшихся
@@ -320,7 +381,8 @@ void foxMove() {
     int[] m0 = findFoxMoves(xf[0],yf[0]).array();
     int[] m1 = findFoxMoves(xf[1],yf[1]).array();
     if (m0.length == 0 && m1.length == 0) {
-      gameScreen = GAME_HENS_WIN;
+      pushCommand(COMMAND_HENS_WIN,0,0);
+      pushDelay();
       
     } else {
       int k = int(random(m0.length + m1.length));
@@ -342,46 +404,33 @@ void foxMove() {
     }
   }
   if (nHens < 9) {
-      gameScreen = GAME_FOXES_WIN;
+      pushCommand(COMMAND_FOXES_WIN,0,0);
+      pushDelay();
   }
-}
-
-/* ����нимировать прыжковый ход лисы.
-   Номер хода лисы указан в переменной `aninum`.
-   Если `aninum == -1`, то анимация завершена.
-   Список ходов находится в объекте `anijump: FoxJumps`.
-*/
-void aniFoxMove() {
-  println("-- aniFoxMove: [" + aninum + "] " + anijump);
-  int nf = anijump.n;
-  int dir = anijump.m[aninum];
-  int x1 = xf[nf];
-  int y1 = yf[nf];
-  int x2 = x1 + dx[dir];
-  int y2 = y1 + dy[dir];
-  int x3 = x2 + dx[dir];
-  int y3 = y2 + dy[dir];
-  b[x1][y1] = EMP;
-  b[x2][y2] = EMP;
-  b[x3][y3] = FOX;
-  xf[nf] = x3;
-  yf[nf] = y3;
-
-  aninum--;
-  anidelay = 20;
 }
 
 /* Передвинуть лису на соседнюю клетку.
  */
 void makeFoxMove(int nf, int dir) {
-  int x1 = xf[nf];
-  int y1 = yf[nf];
-  int x2 = x1 + dx[dir];
-  int y2 = y1 + dy[dir];
-  b[x2][y2] = FOX;
-  b[x1][y1] = EMP;
-  xf[nf] = x2;
-  yf[nf] = y2;
+  b[xf[nf]][yf[nf]] = EMP;
+
+  xf[nf] += dx[dir];
+  yf[nf] += dy[dir];
+  b[xf[nf]][yf[nf]] = FOX;
+}
+
+/* Перепрыгнуть лисой через одну курицу в указанном направлении.
+ */
+void makeFoxJump(int nf, int dir) {
+  b[xf[nf]][yf[nf]] = EMP;
+
+  xf[nf] += dx[dir];
+  yf[nf] += dy[dir];
+  b[xf[nf]][yf[nf]] = EMP;
+
+  xf[nf] += dx[dir];
+  yf[nf] += dy[dir];
+  b[xf[nf]][yf[nf]] = FOX;
 }
 
 // направления
@@ -393,6 +442,9 @@ boolean onBoard(int x, int y) {
   return x>=0 && x<N && y>=0 && y<N;
 }
 
+/* Получть список направлений н свободные клетки 
+   для указанной лисы.
+ */
 IntList findFoxMoves(int fx, int fy) {
   IntList result = new IntList();
   for (int i=0; i<4; i++) {
@@ -405,22 +457,31 @@ IntList findFoxMoves(int fx, int fy) {
   return result;
 }
 
-/* От заданной точки `(fx,fy)` продолжить
-   стек прыжков `stack`, содержащий направления.
+/* От заданной точки с координатами лисы `(fx,fy)` 
+   продолжить стек прыжков `stack`, содержащий направления.
    Если больше прыжков сделать из заданной точки
    невозможно, добавить стек в список результатов.
  */
 void collectFoxJumps(int fx, int fy,
                      IntList stack,
                      ArrayList<int[]> result) {
+  // переберем 4 возможных напрвления
   for (int i=0; i<4; i++) {
     int x1 = fx + dx[i];
     int y1 = fy + dy[i];
+    
+    /* Если рядом с лисой в указанном направлении находится курица,
+       перепрыгнем через нее.
+     */  
     if (onBoard(x1,y1) && b[x1][y1] == HEN) {
       int x2 = x1 + dx[i];
       int y2 = y1 + dy[i];
       if (onBoard(x2,y2) && b[x2][y2] == EMP) {
-        // push state
+        
+        /* Изменить позицию на доске и 
+           сохранить направление возможного прыжка в стеке.
+           Затем продолжить рекурсивно искать возможные ходы.
+         */
         b[fx][fy] = EMP;
         b[x1][y1] = EMP;
         b[x2][y2] = FOX;
@@ -428,14 +489,20 @@ void collectFoxJumps(int fx, int fy,
 
         collectFoxJumps(x2,y2,stack,result);
 
-        // pop state
-        stack.remove(stack.size()-1);
+        /* Восстановить позицию на доске и 
+           убрать последний прыжок из стека .
+         */
         b[fx][fy] = FOX;
         b[x1][y1] = HEN;
         b[x2][y2] = EMP;
+        stack.remove(stack.size()-1);
       }
     }
   }
+
+  /* Если больше прыжков сделать из заданной точки
+     невозможно, добавить стек в список результатов.
+   */  
   stack.reverse();
   result.add(stack.array());
 }
