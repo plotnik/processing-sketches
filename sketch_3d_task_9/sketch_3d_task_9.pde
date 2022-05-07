@@ -9,7 +9,7 @@ PVector[] v = new PVector[4];
 int k = 30;
 
 void setup() {
-  size(800, 500, P3D);
+  size(1000, 600, P3D);
   fill(204);
 }
 
@@ -18,12 +18,16 @@ void draw() {
   lights();
   background(0);
     
-  float alpha = float(mouseX)/width *2*PI;  
-  //print(mouseX + " ");
-  float R = 100;
-  camera(R*cos(alpha), R*sin(alpha), 220.0, // eyeX, eyeY, eyeZ
+  float b = float(mouseY)/width*2*PI; 
+  float a = float(mouseY)/height*2*PI; 
+  float R = 500;
+  float eyeX = R*cos(b); 
+  float eyeY = R*cos(a)*sin(b); 
+  float eyeZ = R*sin(a)*sin(b);
+  //print(a + " " + b + " / ");
+  camera(eyeX, eyeY, eyeZ,
          0, 0, 0,  // centerX, centerY, centerZ
-         0.0, 1.0, 0.0); // upX, upY, upZ
+         0.0, 0.0, 1.0); // upX, upY, upZ
          
   v[0] = new PVector(4,2,0);
   v[1] = new PVector(6,6,0);
@@ -36,6 +40,7 @@ void draw() {
   for (int i = 0; i < v.length; i++) {
     pushMatrix();
     translate(k*v[i].x, k*v[i].y, k*v[i].z);
+    if (v[i].z==0) stroke(255,0,0); else stroke(0,255,0); 
     sphere(5);
     popMatrix();
   }
