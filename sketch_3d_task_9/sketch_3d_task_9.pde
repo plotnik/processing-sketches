@@ -17,18 +17,30 @@ void draw() {
   stroke(255);
   lights();
   background(0);
-    
-  float b = float(mouseY)/width*2*PI; 
-  float a = float(mouseY)/height*2*PI; 
+  
+  /*
+  float a = float(mouseX)/width*2*PI; 
+  float b = float(mouseY)/height*2*PI; 
   float R = 500;
   float eyeX = R*cos(b); 
   float eyeY = R*cos(a)*sin(b); 
   float eyeZ = R*sin(a)*sin(b);
+
   //print(a + " " + b + " / ");
   camera(eyeX, eyeY, eyeZ,
          0, 0, 0,  // centerX, centerY, centerZ
+         0.0, 0.0, 1.0); // upX, upY, upZ 
+  */       
+         
+  camera(200, 200, 400,
+         0, 0, 0,  // centerX, centerY, centerZ
          0.0, 0.0, 1.0); // upX, upY, upZ
          
+  float a = float(mouseX)/width*2*PI;
+  float b = float(mouseY)/height*2*PI; 
+  rotateX(a);
+  rotateZ(b);         
+  
   v[0] = new PVector(4,2,0);
   v[1] = new PVector(6,6,0);
   v[2] = new PVector(2,6,0);
@@ -50,7 +62,8 @@ void draw() {
 
   ldots(v[0], v[3]);
   ldots(v[1], v[3]);
-  ldots(v[2], v[3]);  
+  ldots(v[2], v[3]); 
+ 
 }
 
 void ldots(PVector v1, PVector v2) {
