@@ -33,13 +33,13 @@ void draw() {
   */       
          
   camera(200, 200, 400,
-         0, 0, 0,  // centerX, centerY, centerZ
+         200, 0, -100,  // centerX, centerY, centerZ
          0.0, 0.0, 1.0); // upX, upY, upZ
          
-  float a = float(mouseX)/width*2*PI;
-  float b = float(mouseY)/height*2*PI; 
-  rotateX(a);
-  rotateZ(b);         
+  float a = float(mouseX)/width*HALF_PI;
+  float b = float(mouseY)/height*HALF_PI; 
+  rotateZ(-a);
+  rotateX(-b);         
   
   v[0] = new PVector(4,2,0);
   v[1] = new PVector(6,6,0);
