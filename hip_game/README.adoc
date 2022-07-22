@@ -1,0 +1,6 @@
+= THE GAME OF HIP
+From "Mathematical Diversions" by Martin Gardner
+
+THE GAME of "Hip," so named because of the hipster's reputed disdain for "squares," is played on a six-by-six checkerboard as follows:
+
+One player holds eighteen blue counters; his opponent holds eighteen yellow counters. They take turns placing a single counter on any vacant cell of the board. Each tries to avoid placing his counters so that four of them mark the corners of a square. The square may be any size and tipped at any angle.
