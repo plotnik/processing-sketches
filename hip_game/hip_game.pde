@@ -70,17 +70,23 @@ class Square {
   }
   
   boolean isSquare() {
-    /*
     int xc = a.x + b.x + c.x + d.x;
     int yc = a.y + b.y + c.y + d.y;
     int ac = sqr(4*a.x - xc) + sqr(4*a.y - yc);
     int bc = sqr(4*b.x - xc) + sqr(4*b.y - yc);
     int cc = sqr(4*c.x - xc) + sqr(4*c.y - yc);
     int dc = sqr(4*d.x - xc) + sqr(4*d.y - yc);
-    return (ac==bc) && (bc==cc) && (cc==dc);
-    */ //<>//
+    boolean diagonales = (ac==bc) && (bc==cc) && (cc==dc);
+    
+    int a_b = mag(a,b); 
+    int b_c = mag(b,c);
+    int c_d = mag(c,d);
+    int a_d = mag(a,d);
+    boolean sides = (a_b==b_c) && (b_c==c_d) && (c_d==a_d);
+    
+    return sides && diagonales;
   }
-   //<>//
+   
   String toString() {
     return "<"+a+"-"+b+"-"+c+"-"+d+">";
   }
@@ -91,6 +97,17 @@ void setup() {
   step = width/N;
   d = step*0.75;
   resetBoard();
+}
+
+// начальное заполнение доски
+void resetBoard() {
+  for (int x=0; x<N; x++) {
+    for (int y=0; y<N; y++) {
+      b[x][y] = Z; //b0[y].charAt(x);
+    }
+  }
+  gameScreen = GAME_A_MOVE;
+  squares = new ArrayList();
 }
 
 ArrayList<Square> findSquares(ArrayList<Point> list) {
@@ -118,15 +135,7 @@ int mag(Point a, Point b) {
   return sqr(a.x-b.x)+sqr(a.y-b.y);
 }
 
-// начальное заполнение доски
-void resetBoard() {
-  for (int x=0; x<N; x++) {
-    for (int y=0; y<N; y++) {
-      b[x][y] = b0[y].charAt(x);
-    }
-  }
-  gameScreen = GAME_A_MOVE;
-}
+
 
 ArrayList<Point> calcList(char ch) {
   ArrayList<Point> result = new ArrayList();  
@@ -212,7 +221,7 @@ void drawPieceAsPoint(float xp, float yp, char cell) {
   ellipse(xp, yp, d, d);
 }
 
-void mousePressed() {
+void mousePressed() { //<>//
   switch (gameScreen) {
     case GAME_A_MOVE: 
       mousePressedInGame(A);
@@ -221,7 +230,7 @@ void mousePressed() {
       mousePressedInGame(B);
       break;
     case GAME_A_WIN:
-      resetBoard(); //<>//
+      resetBoard();
       break;
     case GAME_B_WIN:
       resetBoard();
