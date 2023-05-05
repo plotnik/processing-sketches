@@ -2,6 +2,7 @@
 
 From *The 6th book of mathematical diversions from Scientific American* by *Martin Gardner*
 
+____
 The Military Game, as it is called in France, is a splendid example of a two-player game that combines extreme simplicity with extraordinary strategic subtlety. The game was popular in French military circles during and after the
 Franco-Prussian War of 1870-1871. It is a pity that it has since been so completely forgotten; not one of the standard histories of boarcl garnes even mentions it.
 
@@ -12,3 +13,4 @@ outcome is a win for Black. He wins if he slips behind "enemy lines," making it 
 
 The game is as simple to learn as ticktacktoe, but it is more exciting to play and more difficult to analyze. Lucas is able to show that White, if he plays rationally, can always win, but there is no simple strategy and the
 game abounds in traps and surprises. Often the best move is the move that seems to be the worst. An experienced Black has little difficulty escaping from an inexperienced White.
+____
