@@ -33,7 +33,7 @@ void setup() {
   }
 }
 
-void mouseClicked() {
+void mousePressed() {
   // Определим координаты нажатой клетки
   int x = floor(map(mouseX, 0, width, 0, n));
   int y = floor(map(mouseY, 0, height, 0, n));
@@ -64,7 +64,8 @@ void draw() {
       rect(xp, yp, xp+step, yp+step);
       if (clicked[x][y]) {
         fill(filled[x][y]? 255:0);
-        circle(xp+step/2, yp+step/2, step*0.75);
+        float d = step*0.75;
+        ellipse(xp+step/2, yp+step/2, d,d);
       }
     }
   }
