@@ -2,15 +2,32 @@
 
 From *The 6th book of mathematical diversions from Scientific American* by *Martin Gardner*
 
-____
-The Military Game, as it is called in France, is a splendid example of a two-player game that combines extreme simplicity with extraordinary strategic subtlety. The game was popular in French military circles during and after the
-Franco-Prussian War of 1870-1871. It is a pity that it has since been so completely forgotten; not one of the standard histories of boarcl garnes even mentions it.
+____ 
+The Military Game, as it is called in France, is a splendid example of a
+two-player game that combines extreme simplicity with extraordinary strategic
+subtlety. The game was popular in French military circles during and after the
+Franco-Prussian War of 1870-1871. It is a pity that it has since been so
+completely forgotten; not one of the standard histories of board games even
+mentions it.
 
-The board for the Military Game is shown in Figure 30 with the positions labeled to facilitate description. One player--we will call him White--has three men that are initially placed on the colored spots, **A**, **1** and **3**. Black, his opponent, has only one man, which he places on spot **5** in the center. (Chess pawns can be used for men, or three pennies and a nickel.) White moves
-first and the game proceeds with alternate turns. Black may move in any direction along a line from one spot to a neighboring spot. White moves similarly, but only left, right or forward (straight ahead or diagonally), never backward. There are no captures. White wins if he can pin Black's
-piece so that it cannot move. This usnally occurs with Black on spot **B**, but it can also occur with Black on spot **4** or **6**. Any other
-outcome is a win for Black. He wins if he slips behind "enemy lines," making it impossible for White to pin him, or if a situation develops in which the same moves are endlessly repeated.
+The board for the Military Game is shown in Figure 30 with the positions labeled
+to facilitate description. One player--we will call him White--has three men
+that are initially placed on the colored spots, **A**, **1** and **3**. Black,
+his opponent, has only one man, which he places on spot **5** in the center.
+(Chess pawns can be used for men, or three pennies and a nickel.) White moves
+first and the game proceeds with alternate turns. Black may move in any
+direction along a line from one spot to a neighboring spot. White moves
+similarly, but only left, right or forward (straight ahead or diagonally), never
+backward. There are no captures. White wins if he can pin Black's piece so that
+it cannot move. This usnally occurs with Black on spot **B**, but it can also
+occur with Black on spot **4** or **6**. Any other outcome is a win for Black.
+He wins if he slips behind "enemy lines," making it impossible for White to pin
+him, or if a situation develops in which the same moves are endlessly repeated.
 
-The game is as simple to learn as ticktacktoe, but it is more exciting to play and more difficult to analyze. Lucas is able to show that White, if he plays rationally, can always win, but there is no simple strategy and the
-game abounds in traps and surprises. Often the best move is the move that seems to be the worst. An experienced Black has little difficulty escaping from an inexperienced White.
+The game is as simple to learn as ticktacktoe, but it is more exciting to play
+and more difficult to analyze. Lucas is able to show that White, if he plays
+rationally, can always win, but there is no simple strategy and the game abounds
+in traps and surprises. Often the best move is the move that seems to be the
+worst. An experienced Black has little difficulty escaping from an inexperienced
+White.
 ____

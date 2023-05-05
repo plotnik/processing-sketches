@@ -158,7 +158,7 @@ void drawPiece(float xc, float yc, int cell) {
   fill(cell == WHITE? 220 : 0);
   ellipse(xc,yc, d2,d2);
   stroke(150);
-  var d = d2;
+  float d = d2;
   for (int i=0; i<2; i++) {
     d *= 0.8;
     ellipse(xc,yc, d,d);
@@ -209,7 +209,7 @@ void mouseReleased() {
     return;
   }
   // определить координаты нажатой клетки
-  var n = mouseCell();
+  int n = mouseCell();
   if (n != -1 && canMove(nsel,n)) {
     b[n] = bsel;
     whiteMove = !whiteMove;
