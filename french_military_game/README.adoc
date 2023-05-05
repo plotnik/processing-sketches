@@ -1,5 +1,6 @@
 = French Military Game
-From "The 6th book of mathematical diversions from Scientific American" by Martin Gardner
+
+From *The 6th book of mathematical diversions from Scientific American* by *Martin Gardner*
 
 The Military Game, as it is called in France, is a splendid example of a two-player game that combines extreme simplicity with extraordinary strategic subtlety. The game was popular in French military circles during and after the
 Franco-Prussian War of 1870-1871. It is a pity that it has since been so completely forgotten; not one of the standard histories of boarcl garnes even mentions it.
