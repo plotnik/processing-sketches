@@ -1,0 +1,23 @@
+= Bridg-it
+
+From *New Mathematical Diversions* by *Martin Gardner*
+
+A striking example of a pairing strategy is provided by the
+topological game of Bridg-it, placed on the market in 1960 and
+now a popular game with children. The reader may remember
+that Bridg-it was introduced in _Scientific American_ in October
+1958 as "the game of Gale"; it was devised by David Gale, a
+mathematician at Brown University.
+
+A Bridg-it board is shown in Figure 111. If it is played on
+paper, one player uses a black pencil for drawing a straight line
+to connect any pair of adjacent black spots, horizontally or verti-
+cally but not diagonally. The other player uses a red pencil for
+similarly joining pairs of red spots. Players take turns drawing
+lines. No line can cross another. The winner is the first player to
+form a connected path joining the two opposite sides of the board
+that are his color. (The commercial Bridg-it board has raised
+spots and small colored plastic bridges that are placed between
+spots.) For many years a proof has been known that there is a
+winining strategy for the player who makes the first move, but
+not until early this year was an actual strategy discovered.
